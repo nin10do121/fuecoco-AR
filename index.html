@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuecoco AR</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+    }
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <model-viewer 
+    src="fuecoco3d (2).glb" 
+    ar 
+    ar-modes="scene-viewer webxr quick-look" 
+    auto-rotate 
+    camera-controls 
+    disable-zoom 
+    shadow-intensity="1"
+    exposure="1" 
+    environment-image="neutral"
+    alt="Fuecoco 3D model">
+  </model-viewer>
+</body>
+</html>
