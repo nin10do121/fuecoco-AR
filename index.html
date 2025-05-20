@@ -1,34 +1,62 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fuecoco AR</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      background-color: black;
-    }
-    model-viewer {
-      width: 100vw;
-      height: 100vh;
-    }
-  </style>
-</head>
-<body>
-  <model-viewer 
-    src="fuecoco3d (2).glb" 
-    ar 
-    ar-modes="scene-viewer webxr quick-look" 
-    auto-rotate 
-    camera-controls 
-    disable-zoom 
-    shadow-intensity="1"
-    exposure="1" 
-    environment-image="neutral"
-    alt="Fuecoco 3D model">
-  </model-viewer>
-</body>
+<html>
+  <head>
+    <title>Fuecoco AR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module">
+      import * as THREE from 'https://cdn.skypack.dev/three@0.150.1';
+      import { GLTFLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
+
+      let camera, scene, renderer, controller;
+
+      init();
+      async function init() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('webgl2', { xrCompatible: true });
+
+        renderer = new THREE.WebGLRenderer({ alpha: true, canvas, context });
+        renderer.xr.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        document.body.appendChild(VRButton.createButton(renderer));
+
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+        scene.add(camera);
+
+        const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        scene.add(light);
+
+        const loader = new GLTFLoader();
+        loader.load(
+          'fuecoco3d (2).glb',
+          gltf => {
+            const model = gltf.scene;
+            model.scale.set(0.3, 0.3, 0.3);
+            model.position.set(0, 0, -1); // 1 meter in front
+            scene.add(model);
+          },
+          undefined,
+          error => console.error('An error occurred loading the model', error)
+        );
+
+        renderer.setAnimationLoop(() => {
+          renderer.render(scene, camera);
+        });
+      }
+
+      import { VRButton } from 'https://cdn.skypack.dev/three/examples/jsm/webxr/VRButton.js';
+    </script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body></body>
 </html>
